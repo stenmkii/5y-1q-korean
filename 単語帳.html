@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Korean Vocab</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Korean Word Cards</h1>
+        
+        <div class="card-container">
+            <div class="card" id="card">
+                <div class="card-face card-front">
+                    <p class="label">WORD</p>
+                    <h2 id="word-display">---</h2>
+                </div>
+                <div class="card-face card-back">
+                    <p class="label">MEANING</p>
+                    <h2 id="meaning-display">---</h2>
+                    <p id="note-display" class="note"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="prev-btn">PREV</button>
+            <span id="counter">0 / 0</span>
+            <button id="next-btn">NEXT</button>
+        </div>
+        <p class="hint">カードをクリックすると反転します</p>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
