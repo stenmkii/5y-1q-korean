@@ -8,9 +8,9 @@ const wordList = [
     {word: "가면", meaning: "行けば", note: ""},
     {word: "곧", meaning: "すぐ", note: ""},
     {word: "괜찮아요", meaning: "大丈夫です", note: ""},
-    {word: "알바", meaning: "アルバイト", note: "「아르바イト」の縮約形"},
+    {word: "알바", meaning: "アルバイト", note: "「아르바이트」の縮約形"},
     {word: "힘내세요", meaning: "頑張ってください", note: "元気出してください"},
-    {word: "시간", meaning: "時間", note: ""},
+    {word: "時間", meaning: "時間", note: "시간"},
     {word: "파이팅", meaning: "ファイト", note: "応援の言葉"},
     {word: "부터", meaning: "〜から", note: "時間などを表す助詞"},
     {word: "들어요?", meaning: "聴きますか", note: ""},
@@ -19,11 +19,11 @@ const wordList = [
     {word: "받을 때", meaning: "受けるとき", note: "もらうとき"},
     {word: "특히 [트키]", meaning: "特に", note: ""},
     {word: "멜로디", meaning: "メロディー", note: ""},
-    {word: "스트レス", meaning: "ストレス", note: ""},
+    {word: "스트레스", meaning: "ストレス", note: ""},
     {word: "가사", meaning: "歌詞", note: ""},
     {word: "최고", meaning: "最高", note: ""},
     {word: "예뻐요", meaning: "きれいです", note: "かわいいです"},
-    {word: "공感百倍", meaning: "すごく共感", note: "공감백배"},
+    {word: "공감백배", meaning: "すごく共感", note: "共感百倍"},
     {word: "-마다", meaning: "〜ごとに", note: "〜によって"},
     {word: "오빠", meaning: "お兄さん", note: ""},
     {word: "야간", meaning: "夜間", note: ""},
@@ -53,13 +53,13 @@ const numBase = [
 const irregQuestions = [
     { word: "걷다 (歩く)", instruction: "ヘヨ体(現在形)は？", options: ["걸어요", "걷어요", "걸아요", "걷아요"], correct: 0 },
     { word: "듣다 (聞く)", instruction: "過去形(〜ました)は？", options: ["들었어요", "듣었어요", "들았어요", "듣았어요"], correct: 0 },
-    { word: "돕다 (助ける)", instruction: "ヘヨ体(現在形)は？", options: ["도와요", "도워요", "돕아요", "도와よ"], correct: 0 },
-    { word: "춥다 (寒い)", instruction: "連結形(〜くて)は？", options: ["추워서", "中部あそ", "ちゅおそ", "ちゅぷよそ"], correct: 0 },
+    { word: "돕다 (助ける)", instruction: "ヘヨ体(現在形)は？", options: ["도와요", "도워요", "돕아요", "도와요"], correct: 0 },
+    { word: "춥다 (寒い)", instruction: "連結形(〜くて)は？", options: ["추워서", "춥아서", "추오서", "추워요"], correct: 0 },
     { word: "닫다 (閉める)", instruction: "ヘヨ体(現在形)は？", options: ["닫아요", "달아요", "닫어요", "달어요"], correct: 0 }
 ];
 
 /**
- * 2. 単語帳ロジック
+ * 2. 単語帳ロジック (単語帳.html)
  */
 if (document.getElementById('card-trigger')) {
     let wordIdx = 0;
@@ -80,7 +80,7 @@ if (document.getElementById('card-trigger')) {
 }
 
 /**
- * 3. 固有数詞ロジック
+ * 3. 固有数詞ロジック (固有数詞.html)
  */
 let numQuestions = [], numIdx = 0, numScore = 0, isAnsweringNum = false;
 
@@ -124,9 +124,8 @@ function showNumQuestion() {
         btn.innerText = choice;
         btn.onclick = () => {
             if (isAnsweringNum) return; isAnsweringNum = true;
-            const correct = q.a;
-            if (choice === correct) { btn.classList.add('correct'); numScore++; } 
-            else { btn.classList.add('wrong'); Array.from(optDiv.children).forEach(b => { if(b.innerText === correct) b.classList.add('correct'); }); }
+            if (choice === q.a) { btn.classList.add('correct'); numScore++; } 
+            else { btn.classList.add('wrong'); Array.from(optDiv.children).forEach(b => { if(b.innerText === q.a) b.classList.add('correct'); }); }
             setTimeout(() => { numIdx++; if (numIdx < numQuestions.length) showNumQuestion(); else showNumResult(); }, 1000);
         };
         optDiv.appendChild(btn);
@@ -140,7 +139,7 @@ function showNumResult() {
 }
 
 /**
- * 4. 不規則活用ロジック
+ * 4. 不規則活用ロジック (不規則活用.html)
  */
 if (document.getElementById('irreg-quiz-screen')) {
     let irregIdx = 0, irregScore = 0, answeredIrreg = false;
