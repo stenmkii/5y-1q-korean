@@ -8,105 +8,26 @@
 </head>
 <body>
     <header>
-        <h1 style="font-size: 1.2rem;">ㄷ・ㅂ 不規則活用</h1>
-        <div id="counter" style="font-size: 0.8rem; opacity: 0.8; margin-top: 5px;">1 / 10</div>
+        <h1>不規則活用練習</h1>
+        <p id="irreg-counter" style="margin-top:5px; font-size:0.8rem; opacity:0.8;">1 / 10</p>
     </header>
 
     <div class="container">
-        <div id="quiz-screen">
-            <div class="base-card">
-                <div id="word" style="font-size: 1.8rem; font-weight: bold; color: var(--primary); margin-bottom: 10px;"></div>
-                <div id="instruction" style="margin-bottom: 20px; color: var(--text-light);"></div>
-                <div id="options" style="display: grid; gap: 10px;"></div>
-                <div id="feedback" style="margin-top: 15px; font-weight: bold; min-height: 1.5em;"></div>
-                <button id="next-btn" class="btn btn-primary" style="display:none; margin-top: 15px;">次の問題へ</button>
-            </div>
+        <div id="irreg-quiz-screen" class="base-card">
+            <div id="irreg-word" style="font-size: 2rem; font-weight: bold; color: var(--primary); margin-bottom: 10px;"></div>
+            <div id="irreg-instruction" style="margin-bottom: 20px; color: var(--text-light); font-size: 0.9rem;"></div>
+            <div id="irreg-options" style="display: grid; gap: 12px;"></div>
+            <div id="irreg-feedback" style="margin-top: 20px; font-weight: bold; min-height: 1.5em; font-size: 1.1rem;"></div>
+            <button id="irreg-next-btn" class="btn btn-primary hidden" style="margin-top: 15px;">次の問題へ</button>
         </div>
 
-        <div id="result-screen" class="base-card" style="display: none;">
-            <h2>結果発表</h2>
-            <p id="score-text" style="font-size: 1.5rem; font-weight: bold; color: var(--primary);"></p>
+        <div id="irreg-result-screen" class="base-card hidden">
+            <h2>お疲れ様でした！</h2>
+            <p id="irreg-score-text" style="font-size: 1.5rem; font-weight: bold; color: var(--primary); margin: 20px 0;"></p>
             <button onclick="location.reload()" class="btn btn-primary">もう一度挑戦</button>
-            <button onclick="location.href='index.html'" class="btn" style="margin-top: 10px;">ポータルへ戻る</button>
+            <button onclick="location.href='index.html'" class="btn" style="margin-top: 10px;">ホームへ戻る</button>
         </div>
     </div>
-
-    <script>
-        // JSロジックは以前と同様ですが、クラス名の指定を .btn .option-btn に合わせてください
-        const questions = [
-            { word: "걷다 (歩く)", instruction: "ヘヨ体(現在形)は？", options: ["걸어요", "걷어요", "걸아요", "걷아요"], correct: 0 },
-            { word: "듣다 (聞く)", instruction: "過去形(〜ました)は？", options: ["들었어요", "듣었어요", "들았어요", "듣았어요"], correct: 0 },
-            { word: "돕다 (助ける)", instruction: "ヘヨ体(現在形)は？", options: ["도와요", "도워요", "돕아요", "도와よ"], correct: 0 }, // 修正
-            { word: "춥다 (寒い)", instruction: "連結形(〜くて)は？", options: ["추워서", "춥아서", "추오서", "춥어서"], correct: 0 },
-            { word: "닫다 (閉める)", instruction: "ヘヨ体(現在形)は？", options: ["닫아요", "달아요", "닫어요", "달어요"], correct: 0 },
-            { word: "어렵다 (難しい)", instruction: "ヘヨ体(現在形)は？", options: ["어려워요", "어렵아요", "어려わよ", "어렵어요"], correct: 0 },
-            { word: "묻다 (尋ねる)", instruction: "過去形(〜ました)は？", options: ["물었어요", "묻었어요", "물았어요", "묻았어요"], correct: 0 },
-            { word: "입다 (着る)", instruction: "ヘヨ体(現在形)は？", options: ["입어요", "이워요", "입아요", "이와요"], correct: 0 },
-            { word: "곱다 (美しい)", instruction: "ヘヨ体(現在形)は？", options: ["고わよ", "고워요", "곱아요", "고와요"], correct: 3 }, // 修正
-            { word: "깨닫다 (悟る)", instruction: "ヘヨ体(現在形)は？", options: ["깨달아요", "깨닫아요", "깨달어요", "깨닫어요"], correct: 0 }
-        ];
-
-        let currentIdx = 0;
-        let score = 0;
-        let answered = false;
-
-        function loadQuestion() {
-            const q = questions[currentIdx];
-            answered = false;
-            document.getElementById('word').innerText = q.word;
-            document.getElementById('instruction').innerText = q.instruction;
-            document.getElementById('feedback').innerText = "";
-            document.getElementById('next-btn').style.display = "none";
-            document.getElementById('counter').innerText = `${currentIdx + 1} / ${questions.length}`;
-
-            const optionsDiv = document.getElementById('options');
-            optionsDiv.innerHTML = "";
-            q.options.forEach((opt, i) => {
-                const btn = document.createElement('button');
-                btn.className = 'btn';
-                btn.innerText = opt;
-                btn.onclick = () => checkAnswer(i, btn);
-                optionsDiv.appendChild(btn);
-            });
-        }
-
-        function checkAnswer(idx, btn) {
-            if (answered) return;
-            answered = true;
-            const correctIdx = questions[currentIdx].correct;
-            const buttons = document.querySelectorAll('#options .btn');
-            
-            if (idx === correctIdx) {
-                btn.classList.add('correct');
-                document.getElementById('feedback').innerText = "正解！ ✨";
-                document.getElementById('feedback').style.color = "var(--success)";
-                score++;
-            } else {
-                btn.classList.add('wrong');
-                buttons[correctIdx].classList.add('correct');
-                document.getElementById('feedback').innerText = "不正解...";
-                document.getElementById('feedback').style.color = "var(--error)";
-            }
-            document.getElementById('next-btn').style.display = "block";
-        }
-
-        document.getElementById('next-btn').onclick = () => {
-            currentIdx++;
-            if (currentIdx < questions.length) {
-                loadQuestion();
-            } else {
-                showResult();
-            }
-        };
-
-        function showResult() {
-            document.getElementById('quiz-screen').style.display = "none";
-            const res = document.getElementById('result-screen');
-            res.style.display = "block";
-            document.getElementById('score-text').innerText = `${questions.length}問中 ${score}問正解！`;
-        }
-
-        loadQuestion();
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
