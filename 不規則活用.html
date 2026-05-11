@@ -1,0 +1,243 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>韓国語 ㄷ・ㅂ不規則活用練習</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --bg-color: #f0f4f8;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --success-color: #48bb78;
+            --error-color: #f56565;
+        }
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* スクロールなし */
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .header {
+            padding: 15px;
+            text-align: center;
+            background: var(--card-bg);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            z-index: 10;
+        }
+        .progress-bar {
+            height: 4px;
+            background: #e2e8f0;
+            width: 100%;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .quiz-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .question-card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .word {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        .instruction {
+            font-size: 1rem;
+            margin-bottom: 25px;
+            color: #666;
+        }
+        .options {
+            display: grid;
+            gap: 12px;
+        }
+        .option-btn {
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            outline: none;
+        }
+        .option-btn:active {
+            transform: scale(0.98);
+            background-color: #edf2f7;
+        }
+        .option-btn.correct {
+            background-color: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+        .option-btn.wrong {
+            background-color: var(--error-color);
+            color: white;
+            border-color: var(--error-color);
+        }
+        #feedback {
+            margin-top: 20px;
+            font-weight: bold;
+            min-height: 1.5em;
+        }
+        .result-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+        }
+        .btn-next {
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2 style="margin:0; font-size: 1.2rem;">ㄷ・ㅂ 不規則活用</h2>
+            <div id="counter" style="font-size: 0.8rem; color: #888; margin-top: 5px;">1 / 10</div>
+        </div>
+        <div class="progress-bar">
+            <div id="progress" class="progress-fill"></div>
+        </div>
+
+        <div id="quiz-screen" class="quiz-area">
+            <div class="question-card">
+                <div id="word" class="word"></div>
+                <div id="instruction" class="instruction"></div>
+                <div id="options" class="options"></div>
+                <div id="feedback"></div>
+                <button id="next-btn" class="btn-next">次の問題へ</button>
+            </div>
+        </div>
+
+        <div id="result-screen" class="result-screen">
+            <h1>お疲れ様でした！</h1>
+            <p id="score-text"></p>
+            <button onclick="location.reload()" class="btn-next" style="display:block">もう一度挑戦</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { word: "걷다 (歩く)", instruction: "ヘヨ体(現在形)は？", options: ["걸어요", "걷어요", "걸아요", "걷아요"], correct: 0 },
+            { word: "듣다 (聞く)", instruction: "過去形(〜ました)は？", options: ["들었어요", "듣었어요", "들았어요", "듣았어요"], correct: 0 },
+            { word: "돕다 (助ける)", instruction: "ヘヨ体(現在形)は？", options: ["도와よ", "도와요", "도워요", "돕아요"], correct: 1 },
+            { word: "춥다 (寒い)", instruction: "連結形(〜くて)は？", options: ["추워서", "춥아서", "추오서", "춥어서"], correct: 0 },
+            { word: "닫다 (閉める)", instruction: "ヘヨ体(現在形)は？", options: ["닫아요", "달아요", "닫어요", "달어요"], correct: 0 },
+            { word: "어렵다 (難しい)", instruction: "ヘヨ体(現在形)は？", options: ["어려워요", "어렵아요", "어려와요", "어렵어요"], correct: 0 },
+            { word: "묻다 (尋ねる)", instruction: "過去形(〜ました)は？", options: ["물었어요", "묻었어요", "물았어요", "묻았어요"], correct: 0 },
+            { word: "입다 (着る)", instruction: "ヘヨ体(現在形)は？", options: ["입어요", "이워요", "입아요", "이와요"], correct: 0 },
+            { word: "곱다 (美しい)", instruction: "ヘヨ体(現在形)は？", options: ["고와요", "고워よ", "고워요", "곱아요"], correct: 0 },
+            { word: "깨닫다 (悟る)", instruction: "ヘヨ体(現在形)は？", options: ["깨달아요", "깨닫아요", "깨달어요", "깨닫어요"], correct: 0 }
+        ];
+
+        let currentIdx = 0;
+        let score = 0;
+        let answered = false;
+
+        function loadQuestion() {
+            const q = questions[currentIdx];
+            answered = false;
+            document.getElementById('word').innerText = q.word;
+            document.getElementById('instruction').innerText = q.instruction;
+            document.getElementById('feedback').innerText = "";
+            document.getElementById('next-btn').style.display = "none";
+            document.getElementById('counter').innerText = `${currentIdx + 1} / ${questions.length}`;
+            document.getElementById('progress').style.width = `${((currentIdx) / questions.length) * 100}%`;
+
+            const optionsDiv = document.getElementById('options');
+            optionsDiv.innerHTML = "";
+            q.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(i, btn);
+                optionsDiv.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(idx, btn) {
+            if (answered) return;
+            answered = true;
+            const correctIdx = questions[currentIdx].correct;
+            const buttons = document.querySelectorAll('.option-btn');
+            
+            if (idx === correctIdx) {
+                btn.classList.add('correct');
+                document.getElementById('feedback').innerText = "正解！ ✨";
+                document.getElementById('feedback').style.color = "var(--success-color)";
+                score++;
+            } else {
+                btn.classList.add('wrong');
+                buttons[correctIdx].classList.add('correct');
+                document.getElementById('feedback').innerText = "不正解...";
+                document.getElementById('feedback').style.color = "var(--error-color)";
+            }
+            document.getElementById('next-btn').style.display = "inline-block";
+        }
+
+        document.getElementById('next-btn').onclick = () => {
+            currentIdx++;
+            if (currentIdx < questions.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        };
+
+        function showResult() {
+            document.getElementById('quiz-screen').style.display = "none";
+            document.getElementById('progress').style.width = "100%";
+            const res = document.getElementById('result-screen');
+            res.style.display = "flex";
+            document.getElementById('score-text').innerText = `${questions.length}問中 ${score}問正解でした！`;
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
