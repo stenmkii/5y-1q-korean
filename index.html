@@ -5,68 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>韓国語学習ポータル</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* ポータル特有のナビゲーションカード用スタイルのみ残す */
-        .nav-card {
-            background: white;
-            padding: 20px;
-            border-radius: 16px;
-            text-decoration: none;
-            color: inherit;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: var(--shadow);
-            transition: transform 0.2s;
-            border-left: 6px solid var(--primary);
-        }
-        .nav-card:active { transform: scale(0.98); }
-        .card-title { font-size: 1.2rem; font-weight: bold; color: var(--primary); }
-        .card-desc { font-size: 0.85rem; color: var(--text-light); }
-        .card-num { border-left-color: #4a90e2; }
-        .card-irreg { border-left-color: #ff6b6b; }
-        .card-word { border-left-color: #67b26f; }
-    </style>
 </head>
 <body>
-
-<header>
-    <h1>韓国語学習センター</h1>
-    <p style="margin-top: 10px; opacity: 0.9;">오늘도 화이팅! (今日も頑張りましょう！)</p>
-</header>
-
-<div class="container">
-    <!-- 固有数詞 -->
-    <a href="固有数詞.html" class="nav-card card-num">
-        <div class="card-info">
-            <div class="card-title">固有数詞マスター</div>
-            <div class="card-desc">하나, 둘, 셋... 数字と助数詞の練習</div>
-        </div>
-        <div class="arrow">❯</div>
-    </a>
-
-    <!-- 不規則活用 -->
-    <a href="不規則活用.html" class="nav-card card-irreg">
-        <div class="card-info">
-            <div class="card-title">不規則活用トレーニング</div>
-            <div class="card-desc">ㄷ, ㅂ, 르変則など難しい活用を攻略</div>
-        </div>
-        <div class="arrow">❯</div>
-    </a>
-
-    <!-- 単語帳 -->
-    <a href="単語帳.html" class="nav-card card-word">
-        <div class="card-info">
-            <div class="card-title">単語帳</div>
-            <div class="card-desc">重要語彙の暗記とクイズ</div>
-        </div>
-        <div class="arrow">❯</div>
-    </a>
-</div>
-
-<footer>
-    &copy; 2026 Korean Study App
-</footer>
-
+    <header>
+        <h1>韓国語学習センター</h1>
+        <p style="margin-top:8px; opacity:0.9;">오늘도 화이팅!</p>
+    </header>
+    <div class="container">
+        <a href="固有数詞.html" class="nav-card" style="border-left-color: #4a90e2;">
+            <div>
+                <div style="font-weight:bold; font-size:1.1rem; color:#4a90e2;">固有数詞</div>
+                <div style="font-size:0.85rem; color:#636e72;">数字と助数詞の練習</div>
+            </div>
+            <span>❯</span>
+        </a>
+        <a href="不規則活用.html" class="nav-card" style="border-left-color: #ff6b6b;">
+            <div>
+                <div style="font-weight:bold; font-size:1.1rem; color:#ff6b6b;">不規則活用</div>
+                <div style="font-size:0.85rem; color:#636e72;">ㄷ・ㅂ変則などを攻略</div>
+            </div>
+            <span>❯</span>
+        </a>
+        <a href="単語帳.html" class="nav-card" style="border-left-color: #67b26f;">
+            <div>
+                <div style="font-weight:bold; font-size:1.1rem; color:#67b26f;">単語帳</div>
+                <div style="font-size:0.85rem; color:#636e72;">重要語彙のフラッシュカード</div>
+            </div>
+            <span>❯</span>
+        </a>
+    </div>
+    <footer>&copy; 2026 Korean Study App</footer>
 </body>
 </html>
