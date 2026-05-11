@@ -2,205 +2,148 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>韓国語 固有数詞マスター</title>
-    <style>
-        :root { 
-            --primary: #4a90e2; 
-            --bg: #f0f2f5; 
-            --success: #28a745; 
-            --error: #dc3545;
-        }
-        body {
-            font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
-            margin: 0; display: flex; justify-content: center; align-items: center;
-            height: 100vh; background: var(--bg); overflow: hidden;
-        }
-        #app {
-            width: 92%; max-width: 400px; background: white; padding: 20px;
-            border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center;
-        }
-        .menu-btn {
-            width: 100%; padding: 15px; margin: 10px 0; border: none;
-            border-radius: 12px; background: white; border: 2px solid var(--primary);
-            color: var(--primary); font-weight: bold; font-size: 1rem; cursor: pointer;
-            transition: 0.2s;
-        }
-        .menu-btn:active { background: var(--primary); color: white; }
-        
-        .question-text { 
-            font-size: 2rem; font-weight: bold; margin: 20px 0; min-height: 4rem; 
-            display: flex; align-items: center; justify-content: center;
-            color: #333;
-        }
-        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .opt-btn {
-            padding: 15px 5px; font-size: 1.1rem; border: 2px solid #eee;
-            border-radius: 12px; background: #fff; cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        /* 答え合わせ用スタイル */
-        .opt-btn.correct { background-color: var(--success) !important; color: white; border-color: var(--success); }
-        .opt-btn.wrong { background-color: var(--error) !important; color: white; border-color: var(--error); }
-        .disabled { pointer-events: none; }
-
-        .hidden { display: none; }
-        .progress { font-size: 0.9rem; color: #888; margin-bottom: 5px; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>固有数詞マスター</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <header>
+        <h1>固有数詞マスター</h1>
+        <p id="progress" style="margin-top: 5px; opacity: 0.8; font-size: 0.8rem;"></p>
+    </header>
 
-<div id="app">
-    <!-- メニュー画面 -->
-    <div id="menu">
-        <h2 style="margin-top:0">固有数詞マスター</h2>
-        <button class="menu-btn" onclick="startQuiz('kn-jp')">ハングル → 日本語</button>
-        <button class="menu-btn" onclick="startQuiz('jp-kn')">日本語 → ハングル</button>
-        <button class="menu-btn" onclick="startQuiz('unit')">単位をつける (変形注意)</button>
+    <div class="container">
+        <!-- メニュー画面 -->
+        <div id="menu" class="base-card">
+            <h2 style="margin-top:0; font-size: 1.1rem;">学習モードを選択</h2>
+            <button class="btn" style="margin-bottom:10px" onclick="startQuiz('kn-jp')">ハングル → 日本語</button>
+            <button class="btn" style="margin-bottom:10px" onclick="startQuiz('jp-kn')">日本語 → ハングル</button>
+            <button class="btn" onclick="startQuiz('unit')">単位をつける (変形注意)</button>
+        </div>
+
+        <!-- クイズ画面 -->
+        <div id="quiz" class="base-card" style="display: none;">
+            <div id="section-title" style="color:var(--primary); font-size:0.8rem; font-weight:bold; margin-bottom: 10px;"></div>
+            <div id="question" style="font-size: 2rem; font-weight: bold; margin: 20px 0;"></div>
+            <div id="options" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;"></div>
+            <button class="btn" style="margin-top:20px; border-color:#ccc; color:#666;" onclick="showMenu()">戻る</button>
+        </div>
+
+        <!-- 結果画面 -->
+        <div id="result" class="base-card" style="display: none;">
+            <h2>お疲れ様でした！</h2>
+            <p id="result-score" style="font-size:2.5rem; font-weight:bold; color:var(--primary); margin: 20px 0;"></p>
+            <button class="btn btn-primary" onclick="showMenu()">トップへ戻る</button>
+        </div>
     </div>
 
-    <!-- クイズ画面 -->
-    <div id="quiz" class="hidden">
-        <div class="progress" id="progress"></div>
-        <div id="section-title" style="color:var(--primary); font-size:0.8rem; font-weight:bold;"></div>
-        <div class="question-text" id="question"></div>
-        <div class="options" id="options"></div>
-        <button class="menu-btn" style="margin-top:20px; border-color:#ccc; color:#666;" onclick="showMenu()">中断して戻る</button>
-    </div>
+    <script>
+        // ※ JSロジックは以前のものをベースに、要素の表示/非表示（display: block/none）をstyle.cssの設計に合わせて調整しています。
+        const base = [
+            { n: 1, kr: "하나", mod: "한", jp: "1つ" },
+            { n: 2, kr: "둘", mod: "두", jp: "2つ" },
+            { n: 3, kr: "셋", mod: "세", jp: "3つ" },
+            { n: 4, kr: "넷", mod: "네", jp: "4つ" },
+            { n: 5, kr: "다섯", mod: "다섯", jp: "5つ" },
+            { n: 6, kr: "여섯", mod: "여섯", jp: "6つ" },
+            { n: 7, kr: "일곱", mod: "일곱", jp: "7つ" },
+            { n: 8, kr: "여덟", mod: "여덟", jp: "8つ" },
+            { n: 9, kr: "아홉", mod: "아홉", jp: "9つ" },
+            { n: 10, kr: "열", mod: "열", jp: "10つ" }
+        ];
 
-    <!-- 結果画面 -->
-    <div id="result" class="hidden">
-        <h2 id="result-status">お疲れ様でした！</h2>
-        <p id="result-score" style="font-size:2rem; font-weight:bold; color:var(--primary);"></p>
-        <button class="menu-btn" style="background:var(--primary); color:white;" onclick="showMenu()">トップへ戻る</button>
-    </div>
-</div>
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let score = 0;
+        let isAnswering = false;
 
-<script>
-    // ハングルに修正
-    const base = [
-        { n: 1, kr: "하나", mod: "한", jp: "1つ" },
-        { n: 2, kr: "둘", mod: "두", jp: "2つ" },
-        { n: 3, kr: "셋", mod: "세", jp: "3つ" },
-        { n: 4, kr: "넷", mod: "네", jp: "4つ" },
-        { n: 5, kr: "다섯", mod: "다섯", jp: "5つ" },
-        { n: 6, kr: "여섯", mod: "여섯", jp: "6つ" },
-        { n: 7, kr: "일곱", mod: "일곱", jp: "7つ" },
-        { n: 8, kr: "여덟", mod: "여덟", jp: "8つ" },
-        { n: 9, kr: "아홉", mod: "아홉", jp: "9つ" },
-        { n: 10, kr: "열", mod: "열", jp: "10つ" }
-    ];
+        function showMenu() {
+            document.getElementById('menu').style.display = 'block';
+            document.getElementById('quiz').style.display = 'none';
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('progress').innerText = '';
+        }
 
-    let currentQuestions = [];
-    let currentIndex = 0;
-    let score = 0;
-    let isAnswering = false; // 二重クリック防止
+        function startQuiz(mode) {
+            currentQuestions = [];
+            score = 0;
+            currentIndex = 0;
 
-    function showMenu() {
-        document.getElementById('menu').classList.remove('hidden');
-        document.getElementById('quiz').classList.add('hidden');
-        document.getElementById('result').classList.add('hidden');
-    }
-
-    function startQuiz(mode) {
-        currentQuestions = [];
-        score = 0;
-        currentIndex = 0;
-        isAnswering = false;
-
-        if (mode === 'kn-jp') {
-            currentQuestions = base.map(i => ({ q: i.kr, a: i.jp, title: "ハングル → 日本語", choices: base.map(b => b.jp) }));
-        } else if (mode === 'jp-kn') {
-            currentQuestions = base.map(i => ({ q: i.jp, a: i.kr, title: "日本語 → ハングル", choices: base.map(b => b.kr) }));
-        } else if (mode === 'unit') {
-            const units = [
-                { name: "個", code: "개", label: "個" },
-                { name: "歳", code: "살", label: "歳" },
-                { name: "時", code: "시", label: "時" }
-            ];
-            base.forEach(i => {
-                const u = units[Math.floor(Math.random() * units.length)];
-                const correct = (i.n <= 4 || i.n === 20 ? i.mod : i.kr) + " " + u.code;
-                currentQuestions.push({
-                    q: `${i.n}${u.label}`,
-                    a: correct,
-                    title: "助数詞との結合 (1~4の変形に注意)",
-                    choices: base.map(b => (b.n <= 4 ? b.mod : b.kr) + " " + u.code)
+            if (mode === 'kn-jp') {
+                currentQuestions = base.map(i => ({ q: i.kr, a: i.jp, title: "ハングル → 日本語", choices: base.map(b => b.jp) }));
+            } else if (mode === 'jp-kn') {
+                currentQuestions = base.map(i => ({ q: i.jp, a: i.kr, title: "日本語 → ハングル", choices: base.map(b => b.kr) }));
+            } else if (mode === 'unit') {
+                const units = [{ name: "個", code: "개" }, { name: "歳", code: "살" }, { name: "時", code: "시" }];
+                base.forEach(i => {
+                    const u = units[Math.floor(Math.random() * units.length)];
+                    const correct = (i.n <= 4 ? i.mod : i.kr) + " " + u.code;
+                    currentQuestions.push({ q: `${i.n}${u.name}`, a: correct, title: "助数詞との結合", choices: base.map(b => (b.n <= 4 ? b.mod : b.kr) + " " + u.code) });
                 });
-            });
-        }
-
-        currentQuestions.sort(() => Math.random() - 0.5);
-        document.getElementById('menu').classList.add('hidden');
-        document.getElementById('quiz').classList.remove('hidden');
-        showQuestion();
-    }
-
-    function showQuestion() {
-        isAnswering = false;
-        const qData = currentQuestions[currentIndex];
-        document.getElementById('progress').innerText = `STEP ${currentIndex + 1} / ${currentQuestions.length}`;
-        document.getElementById('section-title').innerText = qData.title;
-        document.getElementById('question').innerText = qData.q;
-
-        const optDiv = document.getElementById('options');
-        optDiv.innerHTML = '';
-        
-        // 選択肢からランダムに4つ抽出（正解を含む）
-        let choices = [qData.a];
-        while(choices.length < 4) {
-            let randomChoice = qData.choices[Math.floor(Math.random() * qData.choices.length)];
-            if(!choices.includes(randomChoice)) choices.push(randomChoice);
-        }
-
-        choices.sort(() => Math.random() - 0.5).forEach(choice => {
-            const btn = document.createElement('button');
-            btn.className = 'opt-btn';
-            btn.innerText = choice;
-            btn.onclick = () => handleAnswer(choice, btn);
-            optDiv.appendChild(btn);
-        });
-    }
-
-    function handleAnswer(selected, btn) {
-        if (isAnswering) return;
-        isAnswering = true;
-
-        const correctAnswer = currentQuestions[currentIndex].a;
-        const allButtons = document.querySelectorAll('.opt-btn');
-        
-        allButtons.forEach(b => b.classList.add('disabled'));
-
-        if (selected === correctAnswer) {
-            btn.classList.add('correct');
-            score++;
-        } else {
-            btn.classList.add('wrong');
-            // 正解のボタンも強調表示
-            allButtons.forEach(b => {
-                if(b.innerText === correctAnswer) b.classList.add('correct');
-            });
-        }
-
-        // 0.8秒後に次の問題へ
-        setTimeout(() => {
-            currentIndex++;
-            if (currentIndex < currentQuestions.length) {
-                showQuestion();
-            } else {
-                showResult();
             }
-        }, 800);
-    }
 
-    function showResult() {
-        document.getElementById('quiz').classList.add('hidden');
-        const resDiv = document.getElementById('result');
-        resDiv.classList.remove('hidden');
-        document.getElementById('result-score').innerText = `${score} / ${currentQuestions.length}`;
-    }
-</script>
+            currentQuestions.sort(() => Math.random() - 0.5);
+            document.getElementById('menu').style.display = 'none';
+            document.getElementById('quiz').style.display = 'block';
+            showQuestion();
+        }
 
+        function showQuestion() {
+            isAnswering = false;
+            const qData = currentQuestions[currentIndex];
+            document.getElementById('progress').innerText = `STEP ${currentIndex + 1} / ${currentQuestions.length}`;
+            document.getElementById('section-title').innerText = qData.title;
+            document.getElementById('question').innerText = qData.q;
+
+            const optDiv = document.getElementById('options');
+            optDiv.innerHTML = '';
+            
+            let choices = [qData.a];
+            while(choices.length < 4) {
+                let randomChoice = qData.choices[Math.floor(Math.random() * qData.choices.length)];
+                if(!choices.includes(randomChoice)) choices.push(randomChoice);
+            }
+
+            choices.sort(() => Math.random() - 0.5).forEach(choice => {
+                const btn = document.createElement('button');
+                btn.className = 'btn';
+                btn.innerText = choice;
+                btn.onclick = () => handleAnswer(choice, btn);
+                optDiv.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(selected, btn) {
+            if (isAnswering) return;
+            isAnswering = true;
+
+            const correctAnswer = currentQuestions[currentIndex].a;
+            const allButtons = document.querySelectorAll('#options .btn');
+            allButtons.forEach(b => b.classList.add('disabled'));
+
+            if (selected === correctAnswer) {
+                btn.classList.add('correct');
+                score++;
+            } else {
+                btn.classList.add('wrong');
+                allButtons.forEach(b => { if(b.innerText === correctAnswer) b.classList.add('correct'); });
+            }
+
+            setTimeout(() => {
+                currentIndex++;
+                if (currentIndex < currentQuestions.length) {
+                    showQuestion();
+                } else {
+                    showResult();
+                }
+            }, 800);
+        }
+
+        function showResult() {
+            document.getElementById('quiz').style.display = 'none';
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('result-score').innerText = `${score} / ${currentQuestions.length}`;
+        }
+    </script>
 </body>
 </html>
