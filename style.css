@@ -1,18 +1,22 @@
 :root {
     --primary: #4a90e2;
-    --primary-dark: #357abd;
-    --accent: #ff6b6b;
-    --success: #48bb78;
-    --error: #f56565;
-    --bg: #f8f9fa;
+    --primary-gradient: linear-gradient(135deg, #4a90e2, #67b26f);
+    --bg: #f0f4f8;
     --card-bg: #ffffff;
-    --text: #333;
-    --text-light: #777;
-    --shadow: 0 4px 12px rgba(0,0,0,0.1);
+    --text: #2d3436;
+    --text-light: #636e72;
+    --success: #00b894;
+    --error: #d63031;
+    --shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
-    font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', sans-serif;
+    font-family: 'Helvetica Neue', Arial, 'Hiragino Sans', sans-serif;
     background-color: var(--bg);
     color: var(--text);
     margin: 0;
@@ -22,61 +26,78 @@ body {
     min-height: 100vh;
 }
 
-/* ヘッダー共通 */
 header {
     width: 100%;
-    padding: 30px 0;
-    background: linear-gradient(135deg, var(--primary), #67b26f);
+    padding: 30px 20px;
+    background: var(--primary-gradient);
     color: white;
     text-align: center;
-    box-shadow: var(--shadow);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
+h1 { margin: 0; font-size: 1.5rem; letter-spacing: 1px; }
+
 .container {
-    width: 92%;
+    width: 100%;
     max-width: 500px;
-    margin-top: 20px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 15px;
+    flex: 1;
 }
 
-/* カード共通 */
+/* 基本カード */
 .base-card {
     background: var(--card-bg);
-    padding: 25px;
+    padding: 30px 20px;
     border-radius: 20px;
     box-shadow: var(--shadow);
     text-align: center;
+    width: 100%;
 }
 
-/* ボタン共通 */
+/* ボタン */
 .btn {
     width: 100%;
-    padding: 15px;
+    padding: 16px;
     border-radius: 12px;
-    border: 2px solid var(--primary);
+    border: 2px solid #e2e8f0;
     background: white;
-    color: var(--primary);
+    color: var(--text);
     font-weight: bold;
     font-size: 1rem;
     cursor: pointer;
-    transition: 0.2s;
-    outline: none;
+    transition: all 0.2s ease;
+    margin-bottom: 10px;
 }
 
-.btn:active {
-    transform: scale(0.98);
-    background: var(--primary);
-    color: white;
-}
+.btn:active { transform: scale(0.98); }
 
 .btn-primary {
     background: var(--primary);
     color: white;
+    border: none;
 }
 
-/* 正誤判定用 */
+/* ポータル用ナビカード */
+.nav-card {
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow);
+    border-left: 6px solid var(--primary);
+}
+
+/* 正誤・状態 */
 .correct { background-color: var(--success) !important; color: white !important; border-color: var(--success) !important; }
 .wrong { background-color: var(--error) !important; color: white !important; border-color: var(--error) !important; }
+.hidden { display: none !important; }
 .disabled { pointer-events: none; }
+
+footer { padding: 20px; font-size: 0.8rem; color: var(--text-light); }
