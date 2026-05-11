@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>韓国語学習ポータル</title>
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --accent: #ff6b6b;
+            --bg: #f8f9fa;
+            --text: #333;
+        }
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        header {
+            width: 100%;
+            padding: 40px 0;
+            background: linear-gradient(135deg, var(--primary), #67b26f);
+            color: white;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        h1 { margin: 0; font-size: 1.8rem; letter-spacing: 1px; }
+        
+        .container {
+            width: 90%;
+            max-width: 500px;
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .nav-card {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-left: 6px solid var(--primary);
+        }
+
+        .nav-card:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .card-info { text-align: left; }
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: var(--primary);
+        }
+        .card-desc {
+            font-size: 0.85rem;
+            color: #777;
+        }
+        .arrow {
+            font-size: 1.5rem;
+            color: #ccc;
+        }
+
+        /* 各カードのアクセントカラー分け */
+        .card-num { border-left-color: #4a90e2; }
+        .card-irreg { border-left-color: #ff6b6b; }
+        .card-word { border-left-color: #67b26f; }
+
+        footer {
+            margin-top: auto;
+            padding: 20px;
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>韓国語学習センター</h1>
+    <p style="margin-top: 10px; opacity: 0.9;">오늘도 화이팅! (今日も頑張りましょう！)</p>
+</header>
+
+<div class="container">
+    <!-- 固有数詞 -->
+    <a href="固有数詞.html" class="nav-card card-num">
+        <div class="card-info">
+            <div class="card-title">固有数詞マスター</div>
+            <div class="card-desc">하나, 둘, 셋... 数字と助数詞の練習</div>
+        </div>
+        <div class="arrow">❯</div>
+    </a>
+
+    <!-- 不規則活用 -->
+    <a href="不規則活用.html" class="nav-card card-irreg">
+        <div class="card-info">
+            <div class="card-title">不規則活用トレーニング</div>
+            <div class="card-desc">ㄷ, ㅂ, 르変則など難しい活用を攻略</div>
+        </div>
+        <div class="arrow">❯</div>
+    </a>
+
+    <!-- 単語帳 -->
+    <a href="単語帳.html" class="nav-card card-word">
+        <div class="card-info">
+            <div class="card-title">単語帳</div>
+            <div class="card-desc">重要語彙の暗記とクイズ</div>
+        </div>
+        <div class="arrow">❯</div>
+    </a>
+</div>
+
+<footer>
+    &copy; 2026 Korean Study App
+</footer>
+
+</body>
+</html>
