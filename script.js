@@ -177,3 +177,121 @@ if (document.getElementById('irreg-quiz-screen')) {
     };
     loadIrreg();
 }
+
+/**
+ * 5. 時計読みクイズロジック (時計.html用)
+ */
+if (document.getElementById('clock-quiz-screen')) {
+    // 1〜12時の固有数詞マップ (助数詞「시」に結合する変形形を適用)
+    const clockHourKr = {
+        1: "한", 2: "두", 3: "세", 4: "네", 5: "다섯", 
+        6: "여섯", 7: "일곱", 8: "여덟", 9: "아홉", 10: "열", 
+        11: "열한", 12: "열두"
+    };
+
+    // 0〜55分(5分刻み)の漢数詞マップ
+    const clockMinKr = {
+        0: "", // 0分の時は「分」を表示しない、または「정각(正刻)」だが、初心者は空文字が一般的
+        5: "오", 10: "십", 15: "십오", 20: "이십", 25: "이십오",
+        30: "삼십", 35: "삼십오", 40: "사십", 45: "사십오", 50: "오십", 55: "오십오"
+    };
+
+    let clockIdx = 0, clockScore = 0, answeredClock = false;
+    let clockQuestions = [];
+
+    // クイズデータの生成 (5問分をランダムに事前ビルド)
+    const generateClockQuestions = () => {
+        const questions = [];
+        for (let i = 0; i < 5; i++) {
+            const h = Math.floor(Math.random() * 12) + 1; // 1~12
+            const m = Math.floor(Math.random() * 12) * 5;  // 0, 5, 10...55
+            
+            // 正解文字列の構築 (例: "한 시 삼십 분" / "두 시")
+            const answerStr = `${clockHourKr[h]} 시` + (m > 0 ? ` ${clockMinKr[m]} 분` : '');
+            
+            // ダミーの選択肢を作るためにプールを用意
+            const pool = new Set([answerStr]);
+            while (pool.size < 4) {
+                const dh = Math.floor(Math.random() * 12) + 1;
+                const dm = Math.floor(Math.random() * 12) * 5;
+                const dummyStr = `${clockHourKr[dh]} 시` + (dm > 0 ? ` ${clockMinKr[dm]} 분` : '');
+                pool.add(dummyStr);
+            }
+
+            questions.push({
+                hour: h,
+                minute: m,
+                correctText: answerStr,
+                options: [...pool].sort(() => Math.random() - 0.5)
+            });
+        }
+        return questions;
+    };
+
+    clockQuestions = generateClockQuestions();
+
+    const loadClockQuestion = () => {
+        answeredClock = false;
+        const q = clockQuestions[clockIdx];
+
+        // カウンターと表示リセット
+        document.getElementById('clock-counter').innerText = `${clockIdx + 1} / ${clockQuestions.length}`;
+        document.getElementById('clock-feedback').innerText = "";
+        document.getElementById('clock-feedback').className = ""; 
+        document.getElementById('clock-next-btn').classList.add('hidden');
+
+        // 時計の針を物理的に回転させる
+        const hourHand = document.getElementById('clock-hour-hand');
+        const minuteHand = document.getElementById('clock-minute-hand');
+        
+        const minDeg = q.minute * 6; // 1分あたり6度
+        const hourDeg = (q.hour % 12) * 30 + (q.minute * 0.5); // 1時間あたり30度 + 分によるズレ
+
+        hourHand.style.transform = `rotate(${hourDeg}deg)`;
+        minuteHand.style.transform = `rotate(${minDeg}deg)`;
+
+        // 選択肢ボタンの生成
+        const optDiv = document.getElementById('clock-options');
+        optDiv.innerHTML = "";
+
+        q.options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'btn';
+            btn.innerText = opt;
+            btn.onclick = () => {
+                if (answeredClock) return;
+                answeredClock = true;
+
+                if (opt === q.correctText) {
+                    btn.classList.add('correct');
+                    document.getElementById('clock-feedback').innerText = "正解！ ✨";
+                    clockScore++;
+                } else {
+                    btn.classList.add('wrong');
+                    // 正解のボタンをハイライト
+                    Array.from(optDiv.children).forEach(b => {
+                        if (b.innerText === q.correctText) b.classList.add('correct');
+                    });
+                    document.getElementById('clock-feedback').innerText = "不正解...";
+                }
+                document.getElementById('clock-next-btn').classList.remove('hidden');
+            };
+            optDiv.appendChild(btn);
+        });
+    };
+
+    // 次へボタンのイベントハンドラ
+    document.getElementById('clock-next-btn').onclick = () => {
+        clockIdx++;
+        if (clockIdx < clockQuestions.length) {
+            loadClockQuestion();
+        } else {
+            document.getElementById('clock-quiz-screen').classList.add('hidden');
+            document.getElementById('clock-result-screen').classList.remove('hidden');
+            document.getElementById('clock-score-text').innerText = `${clockScore} / ${clockQuestions.length} 正解！`;
+        }
+    };
+
+    // 初回読み込み実行
+    loadClockQuestion();
+}
