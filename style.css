@@ -123,3 +123,68 @@ footer {
     letter-spacing: 0.1em;
     color: var(--text-light);
 }
+
+.clock-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.analog-clock {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    border: 1px solid var(--primary); /* 既存の枠線に合わせる */
+    border-radius: 50%;
+    background: var(--card-bg);
+}
+
+/* 針の共通設定 */
+.analog-clock .hand {
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    transform-origin: bottom center;
+    background-color: var(--primary);
+    transform: rotate(0deg);
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* 時針 (太短く) */
+.analog-clock .hour-hand {
+    width: 4px;
+    height: 45px;
+    margin-left: -2px;
+}
+
+/* 分針 (細長く) */
+.analog-clock .minute-hand {
+    width: 2px;
+    height: 70px;
+    margin-left: -1px;
+    background-color: var(--text-light); /* 少し色を抜いて区別しやすく */
+}
+
+/* 中央の軸 */
+.analog-clock .center-dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    background-color: var(--primary);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* 文字盤の数字 */
+.clock-number {
+    position: absolute;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-light);
+}
+.c12 { top: 8px; left: 50%; transform: translateX(-50%); }
+.c3  { right: 10px; top: 50%; transform: translateY(-50%); }
+.c6  { bottom: 8px; left: 50%; transform: translateX(-50%); }
+.c9  { left: 10px; top: 50%; transform: translateY(-50%); }
