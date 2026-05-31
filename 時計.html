@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>시계 보기 - 韓国語練習</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>시계 보기</h1>
+    </header>
+
+    <div class="container">
+        <div id="clock-quiz-screen" class="base-card">
+            <div id="clock-counter" style="font-size: 0.8rem; color: var(--text-light); margin-bottom: 12px;">1 / 5</div>
+            <div style="font-size: 0.9rem; letter-spacing: 0.1em; margin-bottom: 24px; color: var(--text-light);">時計を見て何時か当てよう</div>
+            
+            <div class="clock-wrapper">
+                <div class="analog-clock">
+                    <div class="hand hour-hand" id="clock-hour-hand"></div>
+                    <div class="hand minute-hand" id="clock-minute-hand"></div>
+                    <div class="center-dot"></div>
+                    <div class="clock-number c12">12</div>
+                    <div class="clock-number c3">3</div>
+                    <div class="clock-number c6">6</div>
+                    <div class="clock-number c9">9</div>
+                </div>
+            </div>
+
+            <div id="clock-options" style="display: flex; flex-direction: column; gap: 12px; margin-top: 24px;"></div>
+            
+            <div id="clock-feedback" style="margin-top: 20px; font-weight: 600; font-size: 0.9rem; min-height: 24px;"></div>
+            <button id="clock-next-btn" class="btn btn-primary hidden" style="margin-top: 12px;">次の問題</button>
+        </div>
+
+        <div id="clock-result-screen" class="base-card hidden">
+            <div style="font-size: 1.2rem; font-weight: 700; margin-bottom: 16px;">クイズ結果</div>
+            <div id="clock-score-text" style="font-size: 1.5rem; font-weight: 700; margin-bottom: 32px; color: var(--primary);">0 / 5 正解！</div>
+            <a href="index.html" class="btn btn-primary" style="text-decoration: none; display: block; text-align: center;">ポータルに戻る</a>
+        </div>
+    </div>
+
+    <footer>
+        &copy; stemmkii
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
